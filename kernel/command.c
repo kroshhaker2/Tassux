@@ -1,6 +1,8 @@
 #include "command.h"
 
 #include "ctype.h"
+#include "ext2.h"
+#include "vfs.h"
 #include "stdint.h"
 #include "stddef.h"
 #include "console.h"
@@ -10,6 +12,9 @@
 #include "ata.h"
 #include "convert.h"
 #include "filesystem.h"
+#include <stddef.h>
+#include <stdint.h>
+#include "kernel.h"
 
 // ==== Обработчики ====
 void cmd_help(char *args) {
@@ -245,9 +250,62 @@ void cmd_fs_check(char *args) {
     detect_filesystem(disk.partitions[part].start_lba);
 }
 
+void cmd_fs_ls(char *args) {
+    if (!args) return;
+    size_t len = strlen(args);
+    
+    if (len != 1 || args[0] < '1' || args[0] > '4') {
+        println("Usage: fs ls <1-4>");
+        return;
+    }
+
+    static mbr_t disk;
+    parse_mbr(&disk);
+
+    uint8_t part = (args[0] - '0') - 1;
+
+    if (disk.partitions[part].type == 0x00) {
+        printf("No filesystem!");
+        print_hex(disk.partitions[part].type);
+        return;
+    }
+    
+    uint32_t start_block = disk.partitions[part].start_lba;
+
+    ext2_super_block_t sb;
+    ext2_block_group_descriptor_t bgdt;
+
+    read_superblock(start_block, &sb);
+    read_bg_desc(start_block, &bgdt);
+
+    vfs_node_t entries[16];
+    size_t count_out;
+
+    read_dir(start_block, &sb, &bgdt, 2, entries, 256, &count_out);
+
+    println("Directory entries:");
+
+    for (size_t i = 0; i < count_out; i++) {
+        vfs_node_t *node = &entries[i];
+
+        if (node->type == 2) {
+            print_colored(node->name, 0x0A); 
+        } else {
+            print_colored(node->name, 0x0F); 
+        }
+
+        print(" [inode=");
+        print_num(node->inode);
+        print(", type=");
+        print_num(node->type);
+        println("]");
+    }
+}
+
 command_t fs_cmds[] = {
     { "help",   cmd_fs_help,   "show this help" },
     { "check",   cmd_fs_check,   "check filesystem" },
+    { "ls", cmd_fs_ls, "list files"},
 };
 
 void cmd_fs(char *args) {

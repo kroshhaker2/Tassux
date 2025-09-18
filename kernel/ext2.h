@@ -2,6 +2,8 @@
 #define _EXT2_H
 
 #include <stdint.h>
+#include <string.h>
+#include "vfs.h"
 
 typedef struct {
     uint32_t s_inodes_count;        /* Общее количество инодов */
@@ -76,11 +78,26 @@ typedef struct {
     uint8_t  osd2[12];         /* ОС-специфичное поле #2 */
 } __attribute__((packed)) ext2_inode_t;
 
+typedef struct ext2_dir_entry {
+    uint32_t inode;       /* номер inode файла/каталога */
+    uint16_t rec_len;     /* длина этой записи */
+    uint8_t name_len;     /* длина имени */
+    uint8_t file_type;    /* тип файла */
+    char name[];          /* имя файла */
+} __attribute__((packed)) ext2_dir_entry_t;
+
+typedef struct {
+    char name[256];       /* имя файла или каталога */
+    uint32_t inode;       /* номер inode объекта */
+    uint8_t type;         /* тип (файл, каталог, симссылка и т.д.) */
+} dir_entry_t;
+
 void read_superblock(uint32_t start_sb_lba, ext2_super_block_t *sb);
 void read_bg_desc (uint32_t start_block, ext2_block_group_descriptor_t *bgd);
 void read_inode (uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, ext2_inode_t *inode, uint8_t n);
-void read_bitmap(uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, uint8_t type, uint8_t *buffer);
-void set_bit(uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, uint8_t type, uint8_t *bitmap, uint32_t index, uint8_t value);
+void read_bitmap(uint32_t start_block, uint32_t block_size, ext2_block_group_descriptor_t *bgdt, uint8_t type, uint8_t *buffer);
+void read_dir(uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, uint32_t inode_number, vfs_node_t *entries,size_t max_entries, size_t *count_out);
+void set_bit(uint32_t start_block, uint32_t block_size, ext2_block_group_descriptor_t *bgdt, uint8_t type, uint8_t *bitmap, uint32_t index, uint8_t value);
 int test_bit(uint8_t *bitmap, uint32_t index);
 
 #endif

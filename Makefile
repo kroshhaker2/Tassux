@@ -2,7 +2,7 @@ CC = gcc
 ASM = nasm
 LD = ld
 
-CFLAGS = -ffreestanding -fno-builtin -nostdlib -nostdinc \
+CFLAGS = -ffreestanding -fno-builtin -nostdlib -nostdinc -std=gnu99 \
          -fno-stack-protector -m32 -Iinclude -Ikernel -Iboot
 CFLAGS_DEBUG = -ffreestanding -fno-builtin -nostdlib -nostdinc \
                -fno-stack-protector -m32 -Iinclude -Ikernel -Iboot -O0 -g -DDEBUG
