@@ -19,9 +19,7 @@ int strcmp(const char* str1, const char* str2) {
 
 char *strtok(char *str, const char *delim) {
     static char *last = 0;
-    if (str) {
-        last = str;
-    }
+    if (str) last = str;
     if (!last) return 0;
 
     char *start = last;
@@ -29,10 +27,7 @@ char *strtok(char *str, const char *delim) {
         const char *d = delim;
         int is_delim = 0;
         while (*d) {
-            if (*start == *d) {
-                is_delim = 1;
-                break;
-            }
+            if (*start == *d) { is_delim = 1; break; }
             d++;
         }
         if (!is_delim) break;

@@ -94,7 +94,7 @@ typedef struct {
 
 void read_superblock(uint32_t start_sb_lba, ext2_super_block_t *sb);
 void read_bg_desc (uint32_t start_block, ext2_block_group_descriptor_t *bgd);
-void read_inode (uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, ext2_inode_t *inode, uint8_t n);
+void read_inode(uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, ext2_inode_t *inode, uint32_t inode_number);
 void read_bitmap(uint32_t start_block, uint32_t block_size, ext2_block_group_descriptor_t *bgdt, uint8_t type, uint8_t *buffer);
 void read_dir(uint32_t start_block, ext2_super_block_t *sb, ext2_block_group_descriptor_t *bgdt, uint32_t inode_number, vfs_node_t *entries,size_t max_entries, size_t *count_out);
 void set_bit(uint32_t start_block, uint32_t block_size, ext2_block_group_descriptor_t *bgdt, uint8_t type, uint8_t *bitmap, uint32_t index, uint8_t value);

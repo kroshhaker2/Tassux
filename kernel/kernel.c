@@ -64,7 +64,7 @@ void kernel_main(unsigned int magic) {
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
     print_colored("         Welcome to Furry OS       \n", WHITE | (BLACK << 4));
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
-    //print_colored("Version: 4\n\n", GREEN);
+    print_colored("Version: 7\n\n", GREEN);
     
     if (magic != MULTIBOOT2_BOOTLOADER_MAGIC) {
         print_colored("ERROR: Invalid multiboot2 magic number!\n", LIGHT_RED | (BLACK << 4));

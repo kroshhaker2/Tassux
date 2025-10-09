@@ -12,9 +12,8 @@
 #include "ata.h"
 #include "convert.h"
 #include "filesystem.h"
-#include <stddef.h>
-#include <stdint.h>
 #include "kernel.h"
+#include "stdbool.h"
 
 // ==== Обработчики ====
 void cmd_help(char *args) {
@@ -253,17 +252,15 @@ void cmd_fs_check(char *args) {
 void cmd_fs_ls(char *args) {
     if (!args) return;
     size_t len = strlen(args);
-    
-    if (len != 1 || args[0] < '1' || args[0] > '4') {
-        println("Usage: fs ls <1-4>");
+    if (len < 2 || args[0] < '1' || args[0] > '4') {
+        println("Usage: fs ls <1-4> <path>");
         return;
     }
-
+    
     static mbr_t disk;
     parse_mbr(&disk);
-
     uint8_t part = (args[0] - '0') - 1;
-
+    
     if (disk.partitions[part].type == 0x00) {
         printf("No filesystem!");
         print_hex(disk.partitions[part].type);
@@ -271,29 +268,64 @@ void cmd_fs_ls(char *args) {
     }
     
     uint32_t start_block = disk.partitions[part].start_lba;
-
     ext2_super_block_t sb;
     ext2_block_group_descriptor_t bgdt;
-
     read_superblock(start_block, &sb);
     read_bg_desc(start_block, &bgdt);
-
+    
     vfs_node_t entries[16];
     size_t count_out;
-
-    read_dir(start_block, &sb, &bgdt, 2, entries, 256, &count_out);
-
+    char *path = args + 2;
+    int file_inode;
+    
+    if (path[0] == '/') {
+        file_inode = 2;
+        
+        char path_copy[256];
+        strcpy(path_copy, path);
+        
+        char *file = strtok(path_copy, "/");
+        
+        if (file == NULL || *file == '\0') {
+            read_dir(start_block, &sb, &bgdt, file_inode, entries, 256, &count_out);
+        } else {
+            while (file != NULL) {
+                read_dir(start_block, &sb, &bgdt, file_inode, entries, 256, &count_out);
+                
+                bool found = false;
+                for (int i = 0; i < count_out; i++) {
+                    if (strcmp(entries[i].name, file) == 0) {
+                        found = true;
+                        file_inode = entries[i].inode;
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    println("This file not found!");
+                    return;
+                }
+                
+                file = strtok(NULL, "/");
+            }
+            
+            read_dir(start_block, &sb, &bgdt, file_inode, entries, 256, &count_out);
+        }
+    } else {
+        println("no released");
+        putchar(path[0]);
+        println("");
+        return;
+    }
+    
     println("Directory entries:");
-
     for (size_t i = 0; i < count_out; i++) {
         vfs_node_t *node = &entries[i];
-
         if (node->type == 2) {
-            print_colored(node->name, 0x0A); 
+            print_colored(node->name, 0x0A);
         } else {
-            print_colored(node->name, 0x0F); 
+            print_colored(node->name, 0x0F);
         }
-
         print(" [inode=");
         print_num(node->inode);
         print(", type=");
