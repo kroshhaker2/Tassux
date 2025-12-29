@@ -1,8 +1,8 @@
 #ifndef _EXT2_H
 #define _EXT2_H
 
-#include <stdint.h>
-#include <string.h>
+#include "../include/string.h"
+#include "../include/stdint.h"
 #include "vfs.h"
 
 typedef struct {

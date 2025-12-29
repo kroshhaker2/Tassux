@@ -1,11 +1,11 @@
 #include "kernel.h"
 
-#include "multiboot2.h"
-#include "console.h"
-#include "command.h"
-#include "stddef.h"
-#include "string.h"
-#include "ext2.h"
+#include "../../boot/multiboot2.h"
+#include "../console/command.h"
+#include "../console/console.h"
+#include "../fs/ext2.h"
+#include "../include/stddef.h"
+#include "../include/string.h"
 
 volatile unsigned int timer_ticks = 0;
 
@@ -64,7 +64,7 @@ void kernel_main(unsigned int magic) {
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
     print_colored("         Welcome to Furry OS       \n", WHITE | (BLACK << 4));
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
-    print_colored("Version: 7\n\n", GREEN);
+    print_colored("Version: 8\n\n", GREEN);
     
     if (magic != MULTIBOOT2_BOOTLOADER_MAGIC) {
         print_colored("ERROR: Invalid multiboot2 magic number!\n", LIGHT_RED | (BLACK << 4));

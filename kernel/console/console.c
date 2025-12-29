@@ -1,9 +1,9 @@
 #include "console.h"
 
-#include "io.h"
-#include "ctype.h"
-#include "keyboard.h"
-#include "convert.h"
+#include "../drivers/keyboard.h"
+#include "../include/convert.h"
+#include "../include/ctype.h"
+#include "../include/io.h"
 
 static struct vga_char* vga_buffer = (struct vga_char*)VGA_MEMORY;
 static int cursor_x = 0, cursor_y = 0;

@@ -1,6 +1,6 @@
 #include "keyboard.h"
 
-#include "io.h"
+#include "../include/io.h"
 
 char getchar(void) {
     static char scancode_to_ascii[128] = {

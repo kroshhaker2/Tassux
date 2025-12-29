@@ -1,7 +1,7 @@
 #ifndef _CONSOLE_H
 #define _CONSOLE_H
 
-#include "stdint.h"
+#include "../include/stdint.h"
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25

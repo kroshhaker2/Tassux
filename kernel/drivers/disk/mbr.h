@@ -1,7 +1,7 @@
 #ifndef _MBR_H
 #define _MBR_H
 
-#include "stdint.h"
+#include "../../include/stdint.h"
 
 typedef struct {
     uint8_t boot_flag;       // 0x80 = bootable

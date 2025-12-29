@@ -1,19 +1,18 @@
 #include "command.h"
 
-#include "ctype.h"
-#include "ext2.h"
-#include "vfs.h"
-#include "stdint.h"
-#include "stddef.h"
+#include "../core/kernel.h"
+#include "../drivers/disk/ata.h"
+#include "../drivers/disk/mbr.h"
+#include "../fs/ext2.h"
+#include "../fs/vfs.h"
+#include "../include/convert.h"
+#include "../include/ctype.h"
+#include "../include/io.h"
+#include "../include/stdbool.h"
+#include "../include/stddef.h"
+#include "../include/stdint.h"
+#include "../include/string.h"
 #include "console.h"
-#include "mbr.h"
-#include "string.h"
-#include "io.h"
-#include "ata.h"
-#include "convert.h"
-#include "filesystem.h"
-#include "kernel.h"
-#include "stdbool.h"
 
 // ==== Обработчики ====
 void cmd_help(char *args) {
@@ -294,17 +293,25 @@ void cmd_fs_ls(char *args) {
                 
                 bool found = false;
                 for (int i = 0; i < count_out; i++) {
+                    print(entries[i].name);
+                    print(" ?? ");
+                    println(file);
                     if (strcmp(entries[i].name, file) == 0) {
                         found = true;
                         file_inode = entries[i].inode;
                         break;
                     }
                 }
+
+                print("found: ");
+                println(found? "true" : "false");
                 
                 if (!found) {
                     println("This file not found!");
                     return;
                 }
+
+                print_num(file_inode);
                 
                 file = strtok(NULL, "/");
             }

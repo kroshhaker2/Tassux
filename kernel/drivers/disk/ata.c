@@ -1,8 +1,8 @@
 #include "ata.h"
 
-#include "io.h"
-#include "console.h"
-#include "kernel.h"
+#include "../../include/io.h"
+#include "../../console/console.h"
+#include "../../core/kernel.h"
 
 static int ata_wait(uint8_t mask, uint8_t value) {
     int timeout = 1000000;

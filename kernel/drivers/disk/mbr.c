@@ -1,7 +1,7 @@
 #include "mbr.h"
 
-#include "console.h"
 #include "ata.h"
+#include "../../console/console.h"
 
 void parse_mbr_partition(const uint8_t num, const uint8_t *buffer, mbr_t *mbr) {
     mbr_partition_t *part = &mbr->partitions[num];
