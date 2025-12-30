@@ -1,5 +1,6 @@
 CC = gcc
 ASM = nasm
+RUSTC = rustc
 LD = ld
 
 CFLAGS = -ffreestanding -fno-builtin -nostdlib -nostdinc -std=gnu99 \
@@ -7,30 +8,41 @@ CFLAGS = -ffreestanding -fno-builtin -nostdlib -nostdinc -std=gnu99 \
 CFLAGS_DEBUG = -ffreestanding -fno-builtin -nostdlib -nostdinc \
                -fno-stack-protector -m32 -Iinclude -Ikernel -Iboot -O0 -g -DDEBUG
 ASMFLAGS = -f elf32
+RUSTFLAGS = --target=i386-unknown-none -C opt-level=2 -C relocation-model=static \
+             -C link-arg=-nostdlib --crate-type=staticlib
 LDFLAGS = -T link.ld -nostdlib -m elf_i386
 
 # Исходники
 C_SOURCES := $(shell find kernel boot -name '*.c')
-ASM_SOURCES := $(shell find boot -name '*.asm')
+ASM_SOURCES := $(shell find kernel boot -name '*.asm')
+RS_SOURCES := $(shell find kernel -name '*.rs')
 
-# Соответствующие объектные файлы в build/
+# Объектные файлы
 C_OBJECTS := $(patsubst %.c, build/%.o, $(C_SOURCES))
-ASM_OBJECTS := $(patsubst %.asm, build/%.o, $(ASM_SOURCES))
+ASM_OBJECTS := $(patsubst %.asm, build/%_asm.o, $(ASM_SOURCES))
+RS_OBJECTS := $(patsubst %.rs, build/%.o, $(RS_SOURCES))
 
-OBJECTS = $(C_OBJECTS) $(ASM_OBJECTS)
+OBJECTS = $(C_OBJECTS) $(ASM_OBJECTS) $(RS_OBJECTS)
 
 all: kernel.bin
 
 debug: CFLAGS := $(CFLAGS_DEBUG)
 debug: clean kernel.bin
 
+# C
 build/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/%.o: %.asm
+# ASM
+build/%_asm.o: %.asm
 	@mkdir -p $(dir $@)
 	$(ASM) $(ASMFLAGS) $< -o $@
+
+# Rust
+build/%.o: %.rs
+	@mkdir -p $(dir $@)
+	$(RUSTC) $(RUSTFLAGS) $< -o $@
 
 # Линковка
 kernel.bin: $(OBJECTS) link.ld
@@ -43,7 +55,7 @@ clean:
 	rm -rf build *.bin
 
 install:
-	rm -f /mnt/boot/kernel-001
-	cp ./kernel.bin /mnt/boot/kernel-001
+	rm -f /mnt/boot/kernel
+	cp ./kernel.bin /mnt/boot/kernel
 
 .PHONY: all run clean install debug

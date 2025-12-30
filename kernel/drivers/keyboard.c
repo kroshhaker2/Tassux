@@ -1,30 +1,27 @@
 #include "keyboard.h"
 
-#include "../include/io.h"
+#include "../console/console.h"
+#include "../include/stdbool.h"
 
-char getchar(void) {
-    static char scancode_to_ascii[128] = {
-        0, 0, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
-        '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
-        0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
-        0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 0,
-        '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-    
-    static char key_pressed = 0;
-    unsigned char scancode = inb(0x60);
+static uint8_t mods = 0;
 
-    if (scancode & 0x80) { // клавиша отпущена
-        key_pressed = 0;
-        return 0;
-    } else {
-        if (!key_pressed && scancode < 128) {
-            key_pressed = 1;
-            return scancode_to_ascii[scancode];
-        }
-    }
-    return 0;
+void keyboard_irq()
+{
+    uint8_t sc = inb(0x60);
+
+    // bool released = sc & 0x80;
+    // sc &= 0x7F;
+
+    // uint16_t key = scancode_to_keycode[sc];
+
+    // if (key == KEY_LEFTSHIFT || key == KEY_RIGHTSHIFT)
+    //     released ? (mods &= ~MOD_SHIFT) : (mods |= MOD_SHIFT);
+
+    // if (key == KEY_LEFTCTRL)
+    //     released ? (mods &= ~MOD_CTRL) : (mods |= MOD_CTRL);
+
+    // key_event_t ev = {.keycode = key, .pressed = !released, .mods = mods};
+
+    print_hex8(sc);
+    // console_on_key(&ev);
 }
