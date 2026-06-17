@@ -62,7 +62,7 @@ void kernel_main(unsigned int magic) {
     clear_screen();
     
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
-    print_colored("         Welcome to Furry OS       \n", WHITE | (BLACK << 4));
+    print_colored("         Welcome to Tassux           \n", WHITE | (BLACK << 4));
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
     
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
