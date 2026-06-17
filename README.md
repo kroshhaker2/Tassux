@@ -1,15 +1,15 @@
-# FurryOS
+# Tassux
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-FurryOS - это Unix-подобная операционная система, разрабатываемая мной для получения себе опыта в системном программировании и углубления знаний языка C.
+Tassux - это Unix-подобная операционная система, разрабатываемая мной для получения себе опыта в системном программировании и углубления знаний языка C.
 
 ## Сборка и запуск
 
 ### Клонирование и сборка
 ```bash
-git clone https://github.com/kroshhaker/FurryOS.git
-cd FurryOS
+git clone https://github.com/kroshhaker/Tassux.git
+cd Tassux
 make
 ```
 
@@ -43,11 +43,11 @@ fdisk /dev/loopX  # Замените X на ваш номер устройств
 ### Установка Grub 2
 ```bash
 sudo grub-install --target=i386-pc --boot-directory=/mnt/boot /dev/loopX
-echo "menuentry 'FurryOS' {" > /mnt/boot/grub/grub.cfg
+echo "menuentry 'Tassux' {" > /mnt/boot/grub/grub.cfg
 echo "    set root='hd0,msdos1'" > /mnt/boot/grub/grub.cfg
 echo "    multiboot /kernel-001" > /mnt/boot/grub/grub.cfg
 echo "}" > /mnt/boot/grub/grub.cfg
 ```
 
 ## Файловая система
-Проект следует стандарту FHS (Filesystem Hierarchy Standard). Готовый образ файловой системы доступен в файле `furryos.tar.xz`.
+Проект следует стандарту FHS (Filesystem Hierarchy Standard). Готовый образ файловой системы доступен в файле `tassux.tar.xz`.
