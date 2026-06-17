@@ -399,7 +399,7 @@ void console_init(void)
     clear_screen();
 
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
-    print_colored("         Welcome to Furry OS       \n", WHITE | (BLACK << 4));
+    print_colored("           Welcome to Tassux         \n", WHITE | (BLACK << 4));
     print_colored("=====================================\n", LIGHT_CYAN | (BLACK << 4));
     print_colored("Version: 4\n\n", GREEN);
 
