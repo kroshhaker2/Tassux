@@ -69,6 +69,6 @@ deploy: kernel.bin
 	./scripts/umount.sh
 
 watch:
-	find kernel boot include -type f | entr -r make deploy
+	find kernel boot -name '*.c' -o -name '*.h' -o -name '*.asm' -o -name '*.rs' | entr -r make deploy
 
 .PHONY: all run clean install debug
