@@ -80,3 +80,4 @@ __pycache__/
 
 *.img
 *bin
+uefi/

@@ -29,7 +29,7 @@ void panic(const char *msg)
 void kernel_main(unsigned int magic)
 {
     console_init();
-    interrupts_init();
+    //interrupts_init();
 
     for (;;)
     {

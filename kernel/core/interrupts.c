@@ -11,10 +11,8 @@ static struct idt_entry idt[IDT_SIZE];
 static void idt_set_gate(uint8_t n, uint32_t handler)
 {
     idt[n].offset_low = handler & 0xFFFF;
-    // В Multiboot загрузчике обычно используется плоская модель памяти:
     // 0x08 = код ядра, 0x10 = данные ядра
-    // Но некоторые загрузчики могут использовать другие значения
-    idt[n].selector = 0x08; // kernel code segment (может быть 0x10 в некоторых случаях)
+    idt[n].selector = 0x08;
     idt[n].zero = 0;
     idt[n].type_attr = 0x8E; // present, ring0, interrupt gate
     idt[n].offset_high = (handler >> 16) & 0xFFFF;

@@ -54,8 +54,21 @@ run:
 clean:
 	rm -rf build *.bin
 
+mount:
+	./scripts/mount.sh
+
+umount:
+	./scripts/umount.sh
+
 install:
-	rm -f /mnt/boot/kernel
-	cp ./kernel.bin /mnt/boot/kernel
+	./scripts/install.sh
+
+deploy: kernel.bin
+	./scripts/mount.sh
+	./scripts/install.sh
+	./scripts/umount.sh
+
+watch:
+	find kernel boot include -type f | entr -r make deploy
 
 .PHONY: all run clean install debug
