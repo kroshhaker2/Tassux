@@ -1,5 +1,5 @@
 {
-  description = "FurryOS freestanding x86 development environment";
+  description = "Tassux freestanding x86 development environment";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -32,7 +32,7 @@
             AS = "nasm";
 
             shellHook = ''
-              echo "FurryOS dev shell: clang $(clang --version | head -n 1)"
+              echo "Tassux dev shell: clang $(clang --version | head -n 1)"
               echo "Targets: BIOS loader + freestanding i686 kernel"
             '';
           };
