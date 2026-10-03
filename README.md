@@ -1,53 +1,32 @@
-# Tassux
+# FurryOS
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+Экспериментальная операционная система для x86.
 
-Tassux - это Unix-подобная операционная система, разрабатываемая мной для получения себе опыта в системном программировании и углубления знаний языка C.
+Текущая реализация начинается с чистого листа: собственный загрузчик без GRUB
+и Multiboot, затем минимальное временное ядро. Предыдущая реализация сохранена
+в [`legacy-multiboot/`](legacy-multiboot/README.md), чтобы позже переносить из
+неё готовые подсистемы в новое ядро.
 
-## Сборка и запуск
- 
-### Клонирование и сборка
+## Среда разработки
+
 ```bash
-git clone https://github.com/kroshhaker/Tassux.git
-cd Tassux
-make
+nix develop
+codium .
 ```
 
-### Работа с QEMU
-Доступны вспомогательные скрипты для работы с виртуальной машиной:
-```bash
-./scripts/mount.sh    # Монтирование mydisk.img в /mnt
-make install          # Копирование ядра в /mnt/boot/
-make run              # Запуск QEMU с вашей ОС
+Окружение содержит Clang/clangd, LLD, LLVM, NASM, GNU Make, QEMU, GDB и
+утилиты для работы с образами дисков. VSCodium нужно запускать из dev shell,
+чтобы расширение увидело зафиксированную во flake версию `clangd`.
+
+Для VSCodium установите рекомендованное расширение `clangd`. Настройки проекта
+уже находятся в `.vscode/settings.json`, а базовые freestanding-флаги — в
+`.clangd`.
+
+## Новая структура
+
+```text
+include/           общие заголовочные файлы
+src/boot/          собственный загрузчик
+src/kernel/        временное ядро
+legacy-multiboot/  предыдущая реализация на GRUB/Multiboot
 ```
-
-## Настройка диска
-
-### Создание образа диска
-```bash
-qemu-img create -f raw mydisk.img 1G
-```
-
-### Разметка диска
-Рекомендуемая схема разделов (MBR):
-1. 128MiB /boot (ext2)
-2. Остальное пространство / (ext2)
-
-Пример создания разделов:
-```bash
-losetup -fP mydisk.img 
-lsblk
-fdisk /dev/loopX  # Замените X на ваш номер устройства
-```
-
-### Установка Grub 2
-```bash
-sudo grub-install --target=i386-pc --boot-directory=/mnt/boot /dev/loopX
-echo "menuentry 'Tassux' {" > /mnt/boot/grub/grub.cfg
-echo "    set root='hd0,msdos1'" > /mnt/boot/grub/grub.cfg
-echo "    multiboot /kernel-001" > /mnt/boot/grub/grub.cfg
-echo "}" > /mnt/boot/grub/grub.cfg
-```
-
-## Файловая система
-Проект следует стандарту FHS (Filesystem Hierarchy Standard). Готовый образ файловой системы доступен в файле `tassux.tar.xz`.

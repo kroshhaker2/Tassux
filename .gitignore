@@ -55,8 +55,9 @@ dkms.conf
 *.dwo
 
 # etc
-.vscode/
-.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 *.code-workspace
 *.log
 *.swp
@@ -77,6 +78,11 @@ node_modules/
 *.tmp
 *.temp
 __pycache__/
+.direnv/
 
 *.img
 *bin
+uefi/
+
+# Local boot/deploy state
+.loopdev

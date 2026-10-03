@@ -1,0 +1,19 @@
+CompileFlags:
+  Add:
+    - --target=i686-none-elf
+    - -std=gnu11
+    - -ffreestanding
+    - -fno-builtin
+    - -fno-stack-protector
+    - -m32
+    - -Wall
+    - -Wextra
+    - -Iinclude
+
+Diagnostics:
+  UnusedIncludes: Strict
+  ClangTidy:
+    Add:
+      - bugprone-*
+      - performance-*
+      - portability-*
