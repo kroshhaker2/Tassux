@@ -1,7 +1,6 @@
 #include "console.h"
 
 #include "../include/convert.h"
-#include "../include/ctype.h"
 #include "../include/io.h"
 #include "command.h"
 

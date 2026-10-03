@@ -5,10 +5,10 @@ LOOP=$(cat .loopdev)
 
 sync
 
-umount /mnt/boot/efi || true
-umount /mnt || true
+sudo umount /mnt/boot/efi || true
+sudo umount /mnt || true
 
-losetup -d "$LOOP"
+sudo losetup -d "$LOOP"
 
 rm -f .loopdev
 

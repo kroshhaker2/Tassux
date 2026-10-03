@@ -1,55 +1,33 @@
 OUTPUT_FORMAT(elf32-i386)
 ENTRY(_start)
 
-PHDRS
-{
-  text PT_LOAD FLAGS(5); /* PF_R | PF_X */
-  data PT_LOAD FLAGS(6); /* PF_R | PF_W */
-}
-
 SECTIONS
 {
-  . = 0x00100000;
+    . = 0x00100000;
 
-  /* Multiboot header (оставляем в текстовом сегменте) */
-  .multiboot ALIGN(4) : { KEEP(*(.multiboot)) } :text
+    .multiboot ALIGN(8) :
+    {
+        KEEP(*(.multiboot))
+    }
 
-  /* код и константы -> сегмент text (RX) */
-  .text : {
-    *(.text)
-    *(.text*)
-    *(.rodata)
-    *(.rodata*)
-  } :text
+    .text ALIGN(16) :
+    {
+        *(.text)
+        *(.text*)
+        *(.rodata)
+        *(.rodata*)
+    }
 
-  /* данные и RW-константы -> сегмент data (RW) */
-  .data : {
-    *(.data)
-    *(.data*)
-  } :data
+    .data ALIGN(16) :
+    {
+        *(.data)
+        *(.data*)
+    }
 
-  .bss : {
-    *(.bss)
-    *(.bss*)
-    *(COMMON)
-  } :data
-
-  /* Простая область под кучу: 32 MiB сразу после .bss */
-  .heap : {
-    _heap_start = .;
-    . = . + 32 * 1024 * 1024; /* 32 MiB */
-    _heap_end = .;
-  } :data
-
-  /* 
-   * Пространство для пользовательских (user) программ.
-   * Здесь резервируем N MiB (в примере — 128 MiB) начиная сразу после кучи.
-   * Каждая пользовательская задача будет получать свой кусок из этого пространства.
-   */
-  .user : {
-    _user_start = .;
-    /* 128 MiB под user-программы */
-    . = . + 128 * 1024 * 1024; /* 128 MiB */
-    _user_end = .;
-  } :data
+    .bss ALIGN(16) :
+    {
+        *(COMMON)
+        *(.bss)
+        *(.bss*)
+    }
 }

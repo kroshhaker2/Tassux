@@ -5,6 +5,7 @@
 #include "../include/stddef.h"
 #include "../include/string.h"
 #include "interrupts.h"
+#include "../drivers/serial/serial.h"
 
 volatile unsigned int timer_ticks = 0;
 
@@ -26,12 +27,12 @@ void panic(const char *msg)
     asm volatile("cli; hlt");
 }
 
-void kernel_main(unsigned int magic)
+void kernel_main(uint32_t magic, void *mb_info)
 {
-    console_init();
-    //interrupts_init();
+    volatile uint16_t *vga = (uint16_t *)0xB8000;
 
-    for (;;)
-    {
-    }
+    vga[0] = 0x0F4F;
+    vga[1] = 0x0F4B;
+
+    for (;;);
 }

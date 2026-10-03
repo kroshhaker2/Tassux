@@ -52,7 +52,7 @@ qemu-system-x86_64 \
     -device ahci,id=ahci \
     -device ide-hd,drive=disk0,bus=ahci.0 \
     \
-    -vga std \
+    -vga qxl \
     \
     -device qemu-xhci \
     -device usb-kbd \
